@@ -32,8 +32,11 @@ $(document).ready(function(){
   });
 
   $(".lineUp").on("click", function(event) {
+
     for (var i = 0; i < window.dancers.length; i++){
       window.dancers[i].setPosition(100, window.dancers[i].left);
+      window.dancers[i].linedUp = !window.dancers[i].linedUp;
+      window.dancers[i].step();
       //something to toggle do/do not call the step function
     }
   });
