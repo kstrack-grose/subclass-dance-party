@@ -32,8 +32,6 @@ $(document).ready(function(){
 
 var makeMoverDancer = function(top, left, timeBetweenSteps){
   makeDancer.apply(this, arguments);
-  this.top = top;
-  this.left = left;
 };
 
 makeMoverDancer.prototype = Object.create(makeDancer.prototype);
@@ -42,3 +40,22 @@ makeMoverDancer.prototype.step = function(){
   makeDancer.prototype.step.apply(this, arguments);
   this.setPosition(this.top++, this.left);
 };
+
+var makeUnicornDancer = function(top, left, timeBetweenSteps){
+  makeDancer.apply(this, arguments);
+  this.top = top;
+  this.left = left;
+  this.face = 'http://www.wallmonkeys.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/c/a/ca-301-v04-unicorn_1.png';
+  this.$node.append('<img src="' + this.face + '" width = "50%" height = "50%">');
+
+};
+
+makeUnicornDancer.prototype = Object.create(makeDancer.prototype);
+makeUnicornDancer.prototype.constructor = makeUnicornDancer;
+makeUnicornDancer.prototype.step = function(){
+  makeDancer.prototype.step.apply(this, arguments);
+  //jquery to make it jump
+  this.$node.animate({top: '-=100px', border: 0}, 200);
+  this.$node.animate({top: '+=100px', border: 0}, 200);
+};
+
