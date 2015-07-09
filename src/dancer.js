@@ -3,7 +3,7 @@ var makeDancer = function(top, left, timeBetweenSteps) {
   this.top = top;
   this.left = left;
   this.linedUp = false;
-
+  this.lastPosition = {top: top, left: left};
   this.timeBetweenSteps = timeBetweenSteps;
   this.step();
   this.setPosition(top, left);
@@ -12,16 +12,21 @@ var makeDancer = function(top, left, timeBetweenSteps) {
 makeDancer.prototype.step = function() {
   var that = this;
   this.checkDistances();
-  setTimeout(function(){
+
+  setTimeout(this.step.bind(this), this.timeBetweenSteps);
+  
+  /*setTimeout(function(){
     if (!that.linedUp) {
       that.step();//.bind(this);
     }
-  }, that.timeBetweenSteps);
+  }, that.timeBetweenSteps);*/
 };
 
 makeDancer.prototype.setPosition = function(top, left) {
   this.top = top;
   this.left = left;
+  this.lastPosition = {top: top, left: left};
+  this.linedUp = false;
   var styleSettings = {
     top: top,
     left: left
@@ -56,3 +61,24 @@ neighbors and do something based on their positions.
 
 makeDancer.prototype.interact = function() {
 };
+
+makeDancer.prototype.lineUp = function() {
+  this.setPosition(0, this.left);
+
+  // if (!this.linedUp) {
+  //   this.lastPosition = {top: this.top, left: this.left};
+  //   this.setPosition(100, this.left);
+  // } else {
+  //   this.setPosition(this.lastPosition["top"], this.left);
+  //   this.step();
+  // }
+  
+  // this.linedUp = !this.linedUp;
+}
+
+
+
+
+
+
+

@@ -32,7 +32,7 @@ $(document).ready(function(){
 
 var makeMoverDancer = function(top, left, timeBetweenSteps){
   makeDancer.apply(this, arguments);
-
+  this.goLeft = true;
 };
 
 makeMoverDancer.prototype = Object.create(makeDancer.prototype);
@@ -65,23 +65,46 @@ var makeUnicornDancer = function(top, left, timeBetweenSteps){
   //'http://www.wallmonkeys.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d
   // 27136e95/c/a/ca-301-v04-unicorn_1.png';
 
-  this.$node.append('<img src="' + this.face + '" height = "' + this.height + 'px" width = "' + this.width + 'px">');
+  this.$node.append('<img class = "sparkley last" src="' + this.face + '" height = "' + this.height + 'px" width = "' + this.width + 'px">');
   //debugger;
 };
 
 makeUnicornDancer.prototype = Object.create(makeDancer.prototype);
 makeUnicornDancer.prototype.constructor = makeUnicornDancer;
 makeUnicornDancer.prototype.step = function(){
-  makeDancer.prototype.step.apply(this, arguments);
+  
   //jquery to make it jump
   // the code below does make it jump but also makes them appear on a single horizontal plane
-  this.$node.animate({top: this.top - 100 + "px", border: 0}, 200);
-  this.$node.animate({top: this.top + 100 + "px", border: 0}, 200);
+  if (!this.linedUp){
+    makeDancer.prototype.step.apply(this, arguments);
+    if (this.left <= 0) {
+      this.goLeft = false;
+      this.$node.addClass("flipped");
+    } else if (this.left >= $("body").width()) {
+      this.goLeft = true;
+      this.$node.removeClass("flipped");
+    }
+    if (this.goLeft) {
+      this.left -= 100;
+      this.$node.animate({top: this.top - 100 + "px", left: this.left - 100 + "px", border: 0}, 200);
+      this.$node.animate({top: this.top + 100 + "px", left: this.left - 100 + "px", border: 0}, 200);
+
+    } else {
+      this.left += 100;
+      this.$node.animate({top: this.top - 100 + "px", left: this.left + 100 + "px", border: 0}, 200);
+      this.$node.animate({top: this.top + 100 + "px", left: this.left + 100 + "px", border: 0}, 200);
+
+    }
+
+  }
 };
+
 makeUnicornDancer.prototype.interact = function() {
   //this.$node.toggleClass('flipped', 800);
   //debugger;
-  this.$node.children("img:first").animate({height: 2*this.height+"px", width: 2*this.width+"px"}, 200);
-  this.$node.children("img:first").animate({height: this.height+"px", width: this.width+"px"}, 200);
+  if (!this.linedUp){
+    this.$node.children("img:first").animate({height: 2*this.height+"px", width: 2*this.width+"px"}, 200);
+    this.$node.children("img:first").animate({height: this.height+"px", width: this.width+"px"}, 200);
+  }
 };
 
