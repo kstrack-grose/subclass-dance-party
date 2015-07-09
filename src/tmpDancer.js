@@ -32,21 +32,26 @@ $(document).ready(function(){
 
 var makeMoverDancer = function(top, left, timeBetweenSteps){
   makeDancer.apply(this, arguments);
+
 };
 
 makeMoverDancer.prototype = Object.create(makeDancer.prototype);
 makeMoverDancer.prototype.constructor = makeMoverDancer;
 makeMoverDancer.prototype.step = function(){
+  //debugger;
   makeDancer.prototype.step.apply(this, arguments);
-  this.setPosition(this.top++, this.left);
+  this.top+=20;
+  this.setPosition(this.top, this.left);
 };
 
 var makeUnicornDancer = function(top, left, timeBetweenSteps){
   makeDancer.apply(this, arguments);
-  this.top = top;
-  this.left = left;
-  this.face = 'http://www.wallmonkeys.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/c/a/ca-301-v04-unicorn_1.png';
-  this.$node.append('<img src="' + this.face + '" height = "50%" width = "50%">');
+  //this.top = top;
+  //this.left = left;
+  this.face = 'lib/assets/img/unicorn.png';
+  //'http://www.wallmonkeys.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d
+  // 27136e95/c/a/ca-301-v04-unicorn_1.png';
+  this.$node.append('<img src="' + this.face + '" height = "180px" width = "150px">');
 
 };
 
@@ -58,5 +63,8 @@ makeUnicornDancer.prototype.step = function(){
   // the code below does make it jump but also makes them appear on a single horizontal plane
   this.$node.animate({top: this.top - 100 + "px", border: 0}, 200);
   this.$node.animate({top: this.top + 100 + "px", border: 0}, 200);
+};
+makeUnicornDancer.prototype.interact = function() {
+  this.$node.toggleClass('flipped', 800);
 };
 
