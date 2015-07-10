@@ -1,38 +1,5 @@
-/*// temporary stupid dancer
-var makeStupidDancer = function(top, left, timeBetweenSteps){
-  makeDancer.apply(this, arguments);
-  this.face = 'http://www.wallmonkeys.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/c/a/ca-301-v04-unicorn_1.png';
-};
-
-makeStupidDancer.prototype = Object.create(makeDancer.prototype);
-makeStupidDancer.prototype.constructor = makeStupidDancer;
-makeStupidDancer.prototype.step = function(){
-  makeDancer.prototype.step.apply(this, arguments);
-  //jquery here (what it will do for its step)
-  this.setPosition(top+10, 10);
-};
-
-
-
-$(document).ready(function(){
-  $('.addDancerButton').click(function(){
-
-    var unicornDancer = new makeStupidDancer(1, 1, 1000);
-    var imgElement = '<img src="' + unicornDancer.face + '" width = "50%" height = "50%">';
-    unicornDancer.$node.append(imgElement);
-    //debugger;
-    // instantiate a new blinky dancer
-    $('.dancefloor').append(unicornDancer.$node);
-
-
-
-
-  })
-});*/
-
 var makeMoverDancer = function(top, left, timeBetweenSteps){
   makeDancer.apply(this, arguments);
-  this.goLeft = true;
 };
 
 makeMoverDancer.prototype = Object.create(makeDancer.prototype);
@@ -50,23 +17,24 @@ var makeUnicornDancer = function(top, left, timeBetweenSteps){
   //this.left = left;
   this.faces = [  {face:    'lib/assets/img/unicorn.png',
                    height: 180,
-                   width: 150},
+                   width: 150,
+                   left: true},
                    {face: 'lib/assets/img/derpyUnicorn.png',
                     height: 200,
-                    width: 140},
+                    width: 140,
+                    left: true},
                    {face: 'lib/assets/img/flyingUnicorn.png',
                     height: 143,
-                    width: 190}
+                    width: 190,
+                    left: false}
                   ];
   this.idx = Math.floor(Math.random()*this.faces.length);
   this.face = this.faces[this.idx]["face"];
   this.height = this.faces[this.idx]["height"];
   this.width = this.faces[this.idx]["width"];
-  //'http://www.wallmonkeys.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d
-  // 27136e95/c/a/ca-301-v04-unicorn_1.png';
+  this.goLeft = this.faces[this.idx]["left"];
 
   this.$node.append('<img class = "sparkley last" src="' + this.face + '" height = "' + this.height + 'px" width = "' + this.width + 'px">');
-  //debugger;
 };
 
 makeUnicornDancer.prototype = Object.create(makeDancer.prototype);
@@ -77,24 +45,26 @@ makeUnicornDancer.prototype.step = function(){
   // the code below does make it jump but also makes them appear on a single horizontal plane
   if (!this.linedUp){
     makeDancer.prototype.step.apply(this, arguments);
-    if (this.left <= 0) {
-      this.goLeft = false;
-      this.$node.addClass("flipped");
-    } else if (this.left >= $("body").width()) {
-      this.goLeft = true;
-      this.$node.removeClass("flipped");
-    }
+
     if (this.goLeft) {
       this.left -= 100;
-      this.$node.animate({top: this.top - 100 + "px", left: this.left - 100 + "px", border: 0}, 200);
-      this.$node.animate({top: this.top + 100 + "px", left: this.left - 100 + "px", border: 0}, 200);
-
+      this.$node.animate({top: this.top - 50 + "px", left: this.left - 100 + "px", border: 0}, 200);
+      this.$node.animate({top: this.top + 50 + "px", left: this.left - 100 + "px", border: 0}, 200);
     } else {
       this.left += 100;
-      this.$node.animate({top: this.top - 100 + "px", left: this.left + 100 + "px", border: 0}, 200);
-      this.$node.animate({top: this.top + 100 + "px", left: this.left + 100 + "px", border: 0}, 200);
-
+      this.$node.animate({top: this.top - 50 + "px", left: this.left + 100 + "px", border: 0}, 200);
+      this.$node.animate({top: this.top + 50 + "px", left: this.left + 100 + "px", border: 0}, 200);
     }
+
+    if (this.left <= 0 && this.goLeft) {
+      //debugger;
+      this.goLeft = false;
+      this.$node.toggleClass("flipped");
+    } else if (this.left >= $("body").width() && !this.goLeft) {
+      //debugger;
+      this.goLeft = true;
+      this.$node.toggleClass("flipped");
+    }  
 
   }
 };
@@ -107,4 +77,3 @@ makeUnicornDancer.prototype.interact = function() {
     this.$node.children("img:first").animate({height: this.height+"px", width: this.width+"px"}, 200);
   }
 };
-
